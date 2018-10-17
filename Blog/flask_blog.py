@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import render_template
-
+from flask import url_for
+from os.path import join
 
 app = Flask(__name__)
 
@@ -21,6 +22,11 @@ mock_post = [
 ]
 
 
+def url_for_static(filename):
+    root = app.config.get('STATIC_ROOT', '')
+    return join(root, filename)
+
+
 @app.route("/")
 def hello():
     return render_template('home.html', data=mock_post)
@@ -32,4 +38,4 @@ def about():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
