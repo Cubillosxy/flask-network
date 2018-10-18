@@ -1,9 +1,15 @@
+from os.path import join
+
 from flask import Flask
 from flask import render_template
 from flask import url_for
-from os.path import join
+
+from forms import RegistrationForm
+from forms import LoginForm
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = '95b54bbdcb40a3e4ef9fcc3de57ca763'
 
 mock_post = [
     {
@@ -35,6 +41,18 @@ def hello():
 @app.route("/about")
 def about():
     return render_template('about.html')
+
+
+@app.route("/register")
+def register():
+    form = RegistrationForm()
+    return render_template('register.html', title='Register', form=form)
+
+
+@app.route("/login")
+def login():
+    form = LoginForm()
+    return render_template('login.html', title='Login', form=form)
 
 
 if __name__ == '__main__':
