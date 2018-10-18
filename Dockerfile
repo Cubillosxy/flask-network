@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
 RUN mkdir /code
 WORKDIR /code
 RUN easy_install -U pip
+RUN pip install --upgrade pip
 
 ADD requirements.txt /code/requirements.txt
 RUN pip install -r requirements.txt
