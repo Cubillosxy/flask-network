@@ -9,28 +9,16 @@ from wtforms.validators import Email
 from wtforms.validators import EqualTo
 
 
-class BaseUserForm(FlaskForm):
-    email = StringField(
-        'Email',
-        validators=[DataRequired, Email()]
-    )
-
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
 
-class RegistrationForm(BaseUserForm):
-
-    username = StringField(
-        'username',
-        validators=[DataRequired(), Length(min=2, max=20)],
-    )
-    confirm_password = PasswordField(
-        'Confirm Password',
-        validators=[DataRequired(), EqualTo('password')],
-    )
-
-
-class LoginForm(BaseUserForm):
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')

@@ -3,6 +3,8 @@ from os.path import join
 from flask import Flask
 from flask import render_template
 from flask import url_for
+from flask import flash
+from flask import redirect
 
 from forms import RegistrationForm
 from forms import LoginForm
@@ -34,7 +36,8 @@ def url_for_static(filename):
 
 
 @app.route("/")
-def hello():
+@app.route("/home")
+def home():
     return render_template('home.html', data=mock_post)
 
 
@@ -43,9 +46,12 @@ def about():
     return render_template('about.html')
 
 
-@app.route("/register")
+@app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!', 'success')
+        return redirect(url_for('home'))
     return render_template('register.html', title='Register', form=form)
 
 
