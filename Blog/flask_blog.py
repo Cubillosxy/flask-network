@@ -1,13 +1,14 @@
 from os.path import join
 
 from flask import Flask
-from flask import render_template
-from flask import url_for
 from flask import flash
 from flask import redirect
+from flask import render_template
+from flask import url_for
+from flask_sqlalchemy import SQLAlchemy
 
-from forms import RegistrationForm
 from forms import LoginForm
+from forms import RegistrationForm
 
 app = Flask(__name__)
 
@@ -55,9 +56,15 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
-@app.route("/login")
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == "hola@gmail.com":
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Login Unsuccessful. Pleaese !', 'danger')
     return render_template('login.html', title='Login', form=form)
 
 
