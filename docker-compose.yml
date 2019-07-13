@@ -12,5 +12,12 @@ services:
     - db
   db:
     image: postgres:10.2
+    environment:
+      - POSTGRES_USER=flask
+      - POSTGRES_PASSWORD=flaskpass
+      - POSTGRES_DB=flask_db
+
     volumes:
     - .:/tmp/data/
+    expose:
+      - 5432
