@@ -120,17 +120,19 @@ def login():
 
 
 def database_initialization_sequence():
+    print('db init...')
     db.create_all()
-    #test_rec = User(
-     #   'edwinc',
-      #  'edwin@gmail.com',
-       # 'demo.jpg',
-       # 'demopass',
-    #)
+    test_rec = User(
+        username='edwinc',
+        email='edwin@gmail.com',
+        #'demo.jpg',
+        password='demopass',
+    )
 
-    #db.session.add(test_rec)
-    #db.session.rollback()
-    #db.session.commit()
+    db.session.add(test_rec)
+    db.session.rollback()
+    print('db test complete. ')
+    db.session.commit()
 
 
 if __name__ == '__main__':
