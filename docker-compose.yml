@@ -3,7 +3,7 @@ services:
   web:
     build: .
     image: flask-network
-    command: python blog/flask_blog.py
+    command: python run.py
     ports:
     - "5000:5000"
     volumes:
@@ -14,7 +14,7 @@ services:
     image: postgres:10.2
     environment:
       - POSTGRES_PASSWORD=flaskpass
-      
+
     volumes:
     - .:/tmp/data/
     expose:
