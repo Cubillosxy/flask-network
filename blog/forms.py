@@ -7,7 +7,9 @@ from wtforms.validators import DataRequired
 from wtforms.validators import Length
 from wtforms.validators import Email
 from wtforms.validators import EqualTo
+from wtforms.validators import ValidationError
 
+from .models import User
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
@@ -15,6 +17,22 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
+
+    def validate_username(self, username):
+    	user = User.query.filter_by(username=username.data).first()
+
+    	if user:
+    		raise ValidationError('This username is taken. Please choose other username')
+
+    	return username
+
+    def validate_email(self, email):
+    	user = User.query.filter_by(email=email.data).first()
+
+    	if user:
+    		raise ValidationError('This email is taken. Please choose other email')
+
+    	return email
 
 
 class LoginForm(FlaskForm):
