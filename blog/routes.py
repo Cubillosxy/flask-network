@@ -12,14 +12,17 @@ from sqlalchemy import or_
 
 from .forms import LoginForm
 from .forms import RegistrationForm
+from .forms import AccountForm
 
 
 from .models import User
 from .models import Post
+from .utils import save_picture
 
 from . import app
 from . import db
 from . import bcrypt
+
 
 mock_post = [
     {
@@ -60,6 +63,10 @@ def register():
         redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
+
+        if form.picture.data:
+            img_file = save_picture(form.picture.data)
+            current_user.image_file = img_file
         pass_encrypt = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         username = form.username.data
 
@@ -102,7 +109,19 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/account', methods=['GET'])
+@app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html', title='Account')
+    form = AccountForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            img_file = save_picture(form.picture.data)
+            current_user.image_file = img_file
+        current_user.email = form.email.data
+        current_user.username = form.username.data
+        db.session.commit()
+        flash('Account Update', 'success')
+        return redirect(url_for('account'))
+
+    image_file = url_for('static', filename='profile_img/{}'.format(current_user.image_file))
+    return render_template('account.html', title='Account', image_file=image_file, form=form)
