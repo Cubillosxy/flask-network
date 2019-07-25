@@ -4,6 +4,7 @@ from flask import redirect
 from flask import render_template
 from flask import url_for
 from flask import request
+from flask import abort
 from flask_login import login_user
 from flask_login import current_user
 from flask_login import logout_user
@@ -13,6 +14,7 @@ from sqlalchemy import or_
 from .forms import LoginForm
 from .forms import RegistrationForm
 from .forms import AccountForm
+from .forms import PostForm
 
 
 from .models import User
@@ -24,23 +26,6 @@ from . import db
 from . import bcrypt
 
 
-mock_post = [
-    {
-        'author': 'Edwin C',
-        'date': '02/10/2018',
-        'title': 'first blog',
-        'content': 'bla bla',
-    },
-
-    {
-        'author': 'Vingo C',
-        'date': '02/14/2018',
-        'title': 'se blog',
-        'content': 'blsd s da bla',
-    },
-]
-
-
 def url_for_static(filename):
     root = app.config.get('STATIC_ROOT', '')
     return join(root, filename)
@@ -49,7 +34,8 @@ def url_for_static(filename):
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html', data=mock_post)
+    posts = Post.query.all()
+    return render_template('home.html', posts=posts)
 
 
 @app.route("/about")
@@ -64,9 +50,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
 
-        if form.picture.data:
-            img_file = save_picture(form.picture.data)
-            current_user.image_file = img_file
+    
         pass_encrypt = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         username = form.username.data
 
@@ -75,6 +59,9 @@ def register():
             email=form.email.data,
             password=pass_encrypt,
         )
+        if form.picture.data:
+            img_file = save_picture(form.picture.data)
+            user.image_file = img_file
         db.session.add(user)
         db.session.commit()
         flash(f'Your account has been created!', 'success')
@@ -125,3 +112,55 @@ def account():
 
     image_file = url_for('static', filename='profile_img/{}'.format(current_user.image_file))
     return render_template('account.html', title='Account', image_file=image_file, form=form)
+
+
+@app.route('/post/new', methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(
+            title=form.title.data,
+            content=form.content.data,
+            author=current_user
+        )
+        db.session.add(post)
+        db.session.commit()
+        flash('Account Update', 'success')
+        return redirect(url_for('home'))
+    return render_template(
+        'new_post.html', 
+        title='New Post', 
+        form=form,
+        legend='New Post'
+    )
+
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
+def post_detail(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('post_detail.html', title=post.title, post=post)
+
+
+@app.route('/post/<int:post_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('Post update', 'success')
+        return redirect(url_for('post_detail', post_id=post_id))
+
+    # implici GET
+    form.title.data = post.title
+    form.content.data = post.content 
+    return render_template(
+        'new_post.html', 
+        title='Update Post',  
+        form=form,
+        legend='Update Post'
+    )

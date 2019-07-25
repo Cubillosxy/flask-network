@@ -5,6 +5,7 @@ from wtforms import StringField
 from wtforms import PasswordField
 from wtforms import SubmitField
 from wtforms import BooleanField
+from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 from wtforms.validators import Length
 from wtforms.validators import Email
@@ -69,3 +70,9 @@ class AccountForm(FlaskForm):
                 raise ValidationError('This email is taken. Please choose other email')
 
             return email
+
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Save')
