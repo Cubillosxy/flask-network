@@ -11,19 +11,19 @@ from flask_login import logout_user
 from flask_login import login_required
 from sqlalchemy import or_
 
-from .forms import LoginForm
-from .forms import RegistrationForm
-from .forms import AccountForm
-from .forms import PostForm
+from blog.forms import LoginForm
+from blog.forms import RegistrationForm
+from blog.forms import AccountForm
+from blog.forms import PostForm
 
 
-from .models import User
-from .models import Post
-from .utils import save_picture
+from blog.models import User
+from blog.models import Post
+from blog.utils import save_picture
 
-from . import app
-from . import db
-from . import bcrypt
+from blog import app
+from blog import db
+from blog import bcrypt
 
 
 def url_for_static(filename):

@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 
 DBUSER = 'postgres'
-DBPASS = 'foobarbaz'
+DBPASS = 'flaskpass'
 DBHOST = 'db'
 DBPORT = '5432'
 DBNAME = 'postgres'
