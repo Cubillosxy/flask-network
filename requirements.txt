@@ -1,9 +1,9 @@
 Flask==1.0.2
-flask-wtf==0.14.2
-Flask-WTF==0.14.2
+flask-wtf==0.14.3
+Flask-WTF==0.14.3
 flask-sqlalchemy==2.4.0
 psycopg2==2.8.3
 ipython==6.2.1
 flask-bcrypt==0.7.1
 flask-login==0.4.1
-Pillow==6.2.0
+Pillow==6.2.2
