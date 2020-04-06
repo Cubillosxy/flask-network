@@ -1,4 +1,7 @@
 # routes
+import settings
+import random
+
 from flask import flash
 from flask import redirect
 from flask import render_template
@@ -25,22 +28,38 @@ from blog import app
 from blog import db
 from blog import bcrypt
 
+from blog import template_filters
 
 def url_for_static(filename):
     root = app.config.get('STATIC_ROOT', '')
     return join(root, filename)
 
-
+@app.context_processor
+def inject_user():
+    return {
+        'blog_tit': settings.BLOG_NAME,
+        'random_visit': random.randint(1,50)
+    }
 @app.route("/")
 @app.route("/home")
 def home():
-    posts = Post.query.all()
-    return render_template('home.html', posts=posts)
+    query = request.args.get('q')
+    if query:
+        query = '%{}%'.format(query)
+        posts = Post.query.filter(Post.title.ilike(query))
+    else:    
+        posts = Post.query.all()[:100]
+    return render_template(
+        'home.html',
+         posts=posts,
+         welcome_message=settings.WELCOME_MESSAGE,
+    )
 
 
 @app.route("/about")
 def about():
-    return render_template('about.html')
+    image_file = url_for('static', filename='profile_img/{}'.format('edwin_c.jpg'))
+    return render_template('about.html', image_file=image_file)
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -124,6 +143,9 @@ def new_post():
             content=form.content.data,
             author=current_user
         )
+        if form.image.data:
+            img_file = save_picture(form.image.data, folder='images')
+            post.image_file = img_file
         db.session.add(post)
         db.session.commit()
         flash('Account Update', 'success')
@@ -151,6 +173,11 @@ def update_post(post_id):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
+        
+        if form.image.data:
+            img_file = save_picture(form.image.data, folder='images')
+            post.image_file = img_file
+
         db.session.commit()
         flash('Post update', 'success')
         return redirect(url_for('post_detail', post_id=post_id))
@@ -163,4 +190,13 @@ def update_post(post_id):
         title='Update Post',  
         form=form,
         legend='Update Post'
+    )
+
+
+
+@app.route('/dedication', methods=['GET', 'POST'])
+@login_required
+def dedication():
+    return render_template(
+        'dedication.html', 
     )

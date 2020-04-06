@@ -1,12 +1,18 @@
 {% extends 'layout.html' %}
 {% block page_title %}
-    Home
+    {{blog_title}} | Home
 {% endblock %}
 
 {% block content %}
-    <br>
-    <p> Welcome </p>
-    <h2> :) </h2>
+
+    <form method="GET" class="form-inline d-flex justify-content-center md-form form-sm active-pink active-pink-2 mt-2">
+      <input class="form-control form-control-sm  w-75" type="text" placeholder="Coronavirus news ..." name='q'>
+      <button type="submit" class="btn btn-info btn-search">Search</button>
+    </form>
+
+    <hr>
+
+    <h2> {{welcome_message}} :) </h2>
     {% for post in posts %}
         <article class="media content-section">
           <img class='rounded-circle article-img' src="{{ url_for('static', filename='profile_img/' + post.author.image_file ) }}">
@@ -24,7 +30,9 @@
              
               
             </h2>
-            <p class="article-content">{{ post.content }}</p>
+            <p class="article-content">{{ post.content|resume_content }}<a class="article-title" href="{{ url_for('post_detail', post_id=post.id) }}"> .... </a></p>
+            <a href="{{ url_for('post_detail', post_id=post.id) }}"> <img class='img-fluid rounded-circle article-post-img' src="{{ url_for('static', filename='images/' + post.image_file|set_default) }}" alt='no image'></a>
+
           </div>
         </article>
     {% endfor %}

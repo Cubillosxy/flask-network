@@ -1,10 +1,23 @@
 {% extends 'layout.html' %}
 {% block page_title %}
-    About
+   {{blog_title}}| About
 {% endblock %}
 
 
 {% block content %}
-    <p> About </p>
-    <p style="text-align: center;"> under construction </p>
+    <p class="center"> <h3 class="title">My gift - my love</h3> </p> 
+
+    <section>
+    		<p>Hice este pequeño blog para en cumple años de mi novia. muack </p>
+    </section>
+
+    <hr>
+	<div class="media">
+		<img class="rounded-circle account-img" src="{{image_file}}" alt='imagen profile'>
+		<div class="media-body">
+			<h2 class="account-heading">Edwin C</h2>
+			<p class='text-secondary'>Made with ❤️️ by me</p>
+		</div>
+		</div>
+
 {% endblock %}
