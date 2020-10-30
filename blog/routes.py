@@ -40,6 +40,7 @@ def inject_user():
         'blog_tit': settings.BLOG_NAME,
         'random_visit': random.randint(1,50)
     }
+
 @app.route("/")
 @app.route("/home")
 def home():
@@ -190,9 +191,10 @@ def update_post(post_id):
         flash('Post update', 'success')
         return redirect(url_for('post_detail', post_id=post_id))
 
-    # implici GET
-    form.title.data = post.title
-    form.content.data = post.content 
+    elif request.method == 'GET':
+        # implicity GET
+        form.title.data = post.title
+        form.content.data = post.content 
     return render_template(
         'new_post.html', 
         title='Update Post',  
@@ -200,6 +202,17 @@ def update_post(post_id):
         legend='Update Post'
     )
 
+
+@app.route("/post/<int:post_id>/delete", methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('home'))
 
 
 @app.route('/dedication', methods=['GET', 'POST'])
