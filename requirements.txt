@@ -8,4 +8,4 @@ flask-bcrypt==0.7.1
 flask-login==0.4.1
 flask_script==2.0.6
 flask_migrate==2.5.3
-Pillow==6.2.2
+Pillow==7.1.0
