@@ -1,0 +1,224 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.2 (Debian 10.2-1.pgdg90+1)
+-- Dumped by pg_dump version 10.2 (Debian 10.2-1.pgdg90+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: DATABASE postgres; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON DATABASE postgres IS 'default administrative connection database';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: post; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE post (
+    id integer NOT NULL,
+    title character varying(100) NOT NULL,
+    date_posted timestamp without time zone NOT NULL,
+    content text NOT NULL,
+    user_id integer NOT NULL,
+    image_file character varying(20)
+);
+
+
+ALTER TABLE post OWNER TO postgres;
+
+--
+-- Name: post_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE post_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE post_id_seq OWNER TO postgres;
+
+--
+-- Name: post_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE post_id_seq OWNED BY post.id;
+
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE "user" (
+    id integer NOT NULL,
+    username character varying(20) NOT NULL,
+    email character varying(120) NOT NULL,
+    image_file character varying(20) NOT NULL,
+    password character varying(60) NOT NULL
+);
+
+
+ALTER TABLE "user" OWNER TO postgres;
+
+--
+-- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE user_id_seq OWNER TO postgres;
+
+--
+-- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE user_id_seq OWNED BY "user".id;
+
+
+--
+-- Name: post id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY post ALTER COLUMN id SET DEFAULT nextval('post_id_seq'::regclass);
+
+
+--
+-- Name: user id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY "user" ALTER COLUMN id SET DEFAULT nextval('user_id_seq'::regclass);
+
+
+--
+-- Data for Name: post; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY post (id, title, date_posted, content, user_id, image_file) FROM stdin;
+1	El ritual	2020-04-04 06:05:39.21974	Ya es hora que lo sepas, soy un brujo y el ritual sigue funcionado, Ellos fueron mis complices	1	7647c739d38c.jpg
+2	Nuestras primeras salidas	2020-04-04 06:17:49.348393	En un restaurante que ni me acuerdo, jjaja, pero mira los comentarios, menos mal escribi que en 18 años :v , 	1	abd7a44d46aa.png
+3	De paseo con la tatacoa 	2020-04-04 06:21:15.798737	Mis primeros pasos en la aventura de viajar , con el amor de mi vida , pero así viaje Monterrey sigue siendo el mejor jjajaj	2	5b65c7948387.jpg
+4	Medallo home hermano	2020-04-04 06:28:02.441315	Aún no sé si me gusta medallo es por qué siempre que fui estaba mi novia jaja, 	2	02286da5c6fd.jpg
+5	Punta Curazao 	2020-04-04 06:31:30.065258	Ain en la empresa dicen que me fui disque a Curazao jajaj, mira mi primer pie afuera ese fue un gran impulso para querer salir de mi Monterrey, y todo gracias a ti muack 	2	8013f9fdf12f.jpg
+6	Por allá en Aguazul 	2020-04-04 06:40:22.583013	Ya es bastante tiempo , y mira todos los esfuerzos por vernos pero el ahora ese corona no deja jaja	2	30456bc2f595.jpg
+7	Cuando éramos jóvenes :v	2020-04-04 06:41:43.80748	Mira tú esa vaina 30 años atrás como nos veíamos de bien. 	2	bbef39129e9a.jpg
+8	Cuando casi llora 	2020-04-04 06:44:59.3902	Me tocó darle dulces para que no llorará , si te acuerdas, que la montaña rusa te ibas a devolver jjjjj , 	2	f889c70cedbf.jpg
+12	Muack	2020-04-04 16:14:59.223242	Thanks	3	2b9223301d55.jpg
+13	Muack	2020-04-04 16:15:38.393881	Thanks	3	06b90aa75cbd.jpg
+14	Muack	2020-04-04 16:16:22.190661	Thanks	3	a05e23fc5785.jpg
+15	Muack	2020-04-04 16:21:32.8804	thanks	3	54f25265cef5.jpg
+9	Muack	2020-04-04 16:10:50.3878	Thanks	3	50b4d1f9084e.jpg
+10	UPTC	2020-04-04 16:11:45.856441	Siempre es bueno recordar ...	3	71a327707701.jpg
+11	Bogota	2020-04-04 16:12:05.9381	Estudiando fuertemente...	3	0e310472bf65.jpg
+\.
+
+
+--
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "user" (id, username, email, image_file, password) FROM stdin;
+2	Dev	edwin.dev.email@gmail.com	default_img.jpg	$2b$12$dYBzj6QE/xW6Rd4kqsBGoexlVYoZn8cAw0OFeARz7EpVk4uWfH0Gi
+1	edwin	edwin.cubillos.ext@nokia.com	1cd663063251.jpg	$2b$12$cPtTSOZfM.Vg1VeBmA9XdeAdWKe.xzAs3QMz9VnMuYzEueIovh60a
+3	nico	lorenavellam@gmail.com	default_img.jpg	$2b$12$cG3fF0ipBQTeOzaGtA.iBepyFIXxP1qvD4Nj7Nxaeun9A0NVFXve.
+\.
+
+
+--
+-- Name: post_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('post_id_seq', 15, true);
+
+
+--
+-- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('user_id_seq', 3, true);
+
+
+--
+-- Name: post post_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY post
+    ADD CONSTRAINT post_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY "user"
+    ADD CONSTRAINT user_email_key UNIQUE (email);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY "user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY "user"
+    ADD CONSTRAINT user_username_key UNIQUE (username);
+
+
+--
+-- Name: post post_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY post
+    ADD CONSTRAINT post_user_id_fkey FOREIGN KEY (user_id) REFERENCES "user"(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

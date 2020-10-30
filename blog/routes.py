@@ -43,6 +43,14 @@ def inject_user():
 @app.route("/")
 @app.route("/home")
 def home():
+
+    bashCommand = "ssh -i  /home/edwin/.ssh/deploy_key_ed deploy@10.133.201.102 '/home/deploy/deploy_zina_test.sh  --auto-migrate'"
+    import subprocess
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+
+    return render_template('deploy.html', result=repr(output))
+
     query = request.args.get('q')
     if query:
         query = '%{}%'.format(query)
