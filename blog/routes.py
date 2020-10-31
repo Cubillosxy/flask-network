@@ -47,17 +47,19 @@ def home():
 
     bashCommand = "ssh -i  /home/edwin/.ssh/deploy_key_ed deploy@10.133.201.102 '/home/deploy/deploy_zina_test.sh  --auto-migrate'"
     import subprocess
-    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
+    #process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    #output, error = process.communicate()
 
-    return render_template('deploy.html', result=repr(output))
+    #return render_template('deploy.html', result=repr(output))
 
     query = request.args.get('q')
+    page = request.args.get('page', 1, type=int)
+    
     if query:
         query = '%{}%'.format(query)
         posts = Post.query.filter(Post.title.ilike(query))
-    else:    
-        posts = Post.query.all()[:100]
+  
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
     return render_template(
         'home.html',
          posts=posts,
@@ -157,7 +159,7 @@ def new_post():
             post.image_file = img_file
         db.session.add(post)
         db.session.commit()
-        flash('Account Update', 'success')
+        flash('Post created', 'success')
         return redirect(url_for('home'))
     return render_template(
         'new_post.html', 
@@ -221,3 +223,13 @@ def dedication():
     return render_template(
         'dedication.html', 
     )
+
+
+@app.route("/user/<string:username>")
+def user_posts(username):
+    page = request.args.get('page', 1, type=int)
+
+    user = User.query.filter_by(username=username).first_or_404()
+    Post.query.filter_by(author=user)
+    posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+    return render_template('user_posts.html', posts=posts, user=user)
