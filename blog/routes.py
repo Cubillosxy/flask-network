@@ -25,6 +25,7 @@ from blog.forms import ResetPasswordForm
 from blog.models import User
 from blog.models import Post
 from blog.utils import save_picture
+from blog.utils import send_reset_email
 
 from blog import app
 from blog import db
@@ -243,12 +244,28 @@ def reset_request():
         return redirect(url_for('home'))
 
     form = RequestResetForm()
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash('An Email has been sent with detail instructions to reset your password', 'info')
+        return redirect(url_for('login'))
     return render_template('reset_request.html', title='Reset passeword', form=form)
 
 
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
+def reset_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('home'))
+
+    user = User.verify_reset_token(token)
+
+    if user is None:
+        flash('That is an invalid token o expired', 'warning')
+        return redirect(url_for('reset_request'))
+
+    form = ResetPasswordForm()
+
+    return render_template('reset_token.html',title='Reset Password', form=form)
 
