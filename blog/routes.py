@@ -18,6 +18,8 @@ from blog.forms import LoginForm
 from blog.forms import RegistrationForm
 from blog.forms import AccountForm
 from blog.forms import PostForm
+from blog.forms import RequestResetForm
+from blog.forms import ResetPasswordForm
 
 
 from blog.models import User
@@ -233,3 +235,20 @@ def user_posts(username):
     Post.query.filter_by(author=user)
     posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
     return render_template('user_posts.html', posts=posts, user=user)
+
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    form = RequestResetForm()
+    return render_template('reset_request.html', title='Reset passeword', form=form)
+
+
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
