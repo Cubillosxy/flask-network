@@ -158,9 +158,9 @@ COPY post (id, title, date_posted, content, user_id, image_file) FROM stdin;
 --
 
 COPY "user" (id, username, email, image_file, password) FROM stdin;
-2	Dev	edwin.dev.email@gmail.com	default_img.jpg	$2b$12$dYBzj6QE/xW6Rd4kqsBGoexlVYoZn8cAw0OFeARz7EpVk4uWfH0Gi
-1	edwin	edwin.cubillos.ext@nokia.com	1cd663063251.jpg	$2b$12$cPtTSOZfM.Vg1VeBmA9XdeAdWKe.xzAs3QMz9VnMuYzEueIovh60a
-3	nico	lorenavellam@gmail.com	default_img.jpg	$2b$12$cG3fF0ipBQTeOzaGtA.iBepyFIXxP1qvD4Nj7Nxaeun9A0NVFXve.
+2	Dev	edwin.demo.email@gmail.com	default_img.jpg	$2b$12$dYBzj6QE/xW6Rd4kqsBGoexlVYoZn8cAw0OFeARz7EpVk4uWfH0Gi
+1	edwin	edwin.demo.ext@nada.com	1cd663063251.jpg	$2b$12$cPtTSOZfM.Vg1VeBmA9XdeAdWKe.xzAs3QMz9VnMuYzEueIovh60a
+3	nico	lore.demo@gmail.com	default_img.jpg	$2b$12$cG3fF0ipBQTeOzaGtA.iBepyFIXxP1qvD4Nj7Nxaeun9A0NVFXve.
 \.
 
 
