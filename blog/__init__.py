@@ -3,6 +3,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from flask_mail import Mail
+import settings
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,6 +41,15 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
+
+app.config['MAIL_SERVER'] = settings.MAIL_SERVER
+app.config['MAIL_PORT'] = settings.MAIL_PORT
+app.config['MAIL_USE_TLS'] = settings.MAIL_USE_TLS
+
+app.config['MAIL_USERNAME'] = settings.MAIL_USERNAME
+app.config['MAIL_PASSWORD'] = settings.MAIL_PASSWORD
+
+mail = Mail(app)
 
 MEDIA = os.path.join(BASE_DIR, 'MEDIA')
 from blog import routes
